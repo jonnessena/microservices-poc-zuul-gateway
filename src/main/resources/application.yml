@@ -1,0 +1,84 @@
+
+
+
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: zull-gateway
+
+server:
+  port: 30002
+
+
+
+zuul:
+  routes:
+    sample:
+      path: /user/**
+      url: http://localhost:8087/secure/user
+      #serviceId: API-SERVICE
+      roles: user,master
+    master:
+      path: /master/**
+      url: http://localhost:8087/secure/master
+      #serviceId: API-SERVICE
+      roles: master
+    logout:
+      path: /logout
+      url: http://nowhere
+      roles: user,master
+    open:
+      path: /open/**
+      url: http://localhost:8087/open
+
+keycloak:
+  # turn off keycloak spring boot auto-configuration:
+  # We only want to use Spring Security without servlet container specific infrastructure
+  # This allows us to pull the Keycloak configuration from here instead of keycloak.json
+  enabled: false
+
+#  realm: bootadmin
+#  auth-server-url: http://localhost:8180/auth
+#  # The client_id
+#  resource: app-todo
+#  credentials:
+#    # The client_secret
+#    secret: 2cc653a3-24cc-4241-896d-813a726f9b33
+#  ssl-required: external
+#  autodetect-bearer-only: true
+#  # Configures what principal.getName() will return
+#  principal-attribute: preferred_username
+#  use-resource-role-mappings: true
+#  token-minimum-time-to-live: 30
+
+  auth-server-url: http://172.17.0.2:8080/auth
+  public-client: false
+  realm: api-gateway
+  resource: service-user
+  ssl-required: none
+  credentials:
+    secret: '123456'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.25.5:8761/eureka
+  ribbon:
+    eureka:
+      enabled: true
+    http:
+      client:
+        enabled: true
+
+logging:
+  level:
+    org:
+      keycloak=TRACE:
