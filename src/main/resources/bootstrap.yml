@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: zull-gateway
+  cloud:
+    config:
+      uri: http://192.168.25.5:9090
