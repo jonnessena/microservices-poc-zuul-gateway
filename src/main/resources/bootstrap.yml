@@ -3,4 +3,4 @@ spring:
     name: zull-gateway
   cloud:
     config:
-      uri: http://192.168.25.5:9090
+      uri: http://34.95.224.180:9090
