@@ -1,6 +1,6 @@
-spring:
-  application:
-    name: zull-gateway
-  cloud:
-    config:
-      uri: http://34.95.224.180:9090
+#spring:
+ # application:
+  #  name: zull-gateway
+  #cloud:
+   # config:
+    #  uri: http://localhost:9090

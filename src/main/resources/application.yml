@@ -7,25 +7,34 @@ spring:
 server:
   port: 30002
 
+
 zuul:
   routes:
     sample:
-      path: /user/**
-      url: http://localhost:8087/secure/user
-      #serviceId: API-SERVICE
+      path: /secure/user**
+      #url: http://34.95.224.180:8087/secure/user
+      #url: http://localhost:8087/secure/user
+      service-id: API-SERVICE
       roles: user,master
+      strip-prefix: false
     master:
-      path: /master/**
-      url: http://localhost:8087/secure/master
-      #serviceId: API-SERVICE
+      path: /secure/master/**
+      #url: http://34.95.224.180:8087/secure/master
+      #url: http://localhost:8087/secure/master
+      service-id: API-SERVICE
       roles: master
+      strip-prefix: false
     logout:
       path: /logout
       url: http://nowhere
       roles: user,master
+      strip-prefix: false
     open:
       path: /open/**
-      url: http://localhost:8087/open
+      #url: http://34.95.224.180:8087/open
+      #url: http://localhost:8087/open
+      service-id: API-SERVICE
+      strip-prefix: false
 
 keycloak:
   # turn off keycloak spring boot auto-configuration:
@@ -33,21 +42,21 @@ keycloak:
   # This allows us to pull the Keycloak configuration from here instead of keycloak.json
   enabled: false
 
-#  realm: bootadmin
-#  auth-server-url: http://localhost:8180/auth
-#  # The client_id
-#  resource: app-todo
-#  credentials:
-#    # The client_secret
-#    secret: 2cc653a3-24cc-4241-896d-813a726f9b33
-#  ssl-required: external
-#  autodetect-bearer-only: true
-#  # Configures what principal.getName() will return
-#  principal-attribute: preferred_username
-#  use-resource-role-mappings: true
-#  token-minimum-time-to-live: 30
+  #  realm: bootadmin
+  #  auth-server-url: http://localhost:8180/auth
+  #  # The client_id
+  #  resource: app-todo
+  #  credentials:
+  #    # The client_secret
+  #    secret: 2cc653a3-24cc-4241-896d-813a726f9b33
+  #  ssl-required: external
+  #  autodetect-bearer-only: true
+  #  # Configures what principal.getName() will return
+  #  principal-attribute: preferred_username
+  #  use-resource-role-mappings: true
+  #  token-minimum-time-to-live: 30
 
-  auth-server-url: http://172.17.0.2:8080/auth
+  auth-server-url: http://cef07.hitss.com.br/auth
   public-client: false
   realm: api-gateway
   resource: service-user
@@ -64,13 +73,19 @@ management:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://192.168.25.5:8761/eureka
+      #defaultZone: ${EUREKA_URI:http://34.95.224.180:8761/eureka}
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+    statusPageUrlPath: /actuator/info
+    healthCheckUrlPath: /actuator/health
   ribbon:
     eureka:
       enabled: true
     http:
       client:
         enabled: true
+
 
 logging:
   level:
