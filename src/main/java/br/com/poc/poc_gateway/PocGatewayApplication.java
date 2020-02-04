@@ -21,6 +21,7 @@ import java.util.Arrays;
 @SpringBootApplication
 @EnableZuulProxy
 @EnableDiscoveryClient
+@RibbonClients(defaultConfiguration = LoadBalancer.class)
 public class PocGatewayApplication {
 
 	public static void main(String[] args) {
@@ -35,5 +36,21 @@ class TodoController {
 	@GetMapping("/")
 	Object getTodos() {
 		return Arrays.asList("Prepare talk..." + Instant.now());
+	}
+}
+
+class LoadBalancer{
+
+	@Autowired
+	IClientConfig ribbonClientConfig;
+
+	@Bean
+	public IPing ribbonPing() {
+
+		return new PingUrl(false,getRoute() + "/ping");
+	}
+
+	private String getRoute() {
+		return RequestContext.getCurrentContext().getRequest().getServletPath();
 	}
 }
